@@ -12,14 +12,24 @@ RUN apt-get update && apt-get install -y \
 	ssmtp \
 	imagemagick \
 	libmagickwand-dev \
-	php-pgsql \
+	libpq-dev \
 	unzip
 
 RUN pecl install imagick
 RUN docker-php-ext-enable imagick
-RUN docker-php-ext-enable pdo pdo_pgsql
 
 RUN docker-php-ext-install soap
+
+RUN apt-get update \
+  && apt-get install -y postgresql postgresql-contrib \
+  && apt-get install sudo \
+  && apt-get install -y libpq-dev \
+  && docker-php-ext-install pdo pdo_pgsql
+
+# RUN echo "deb http://ftp.de.debian.org/debian stretch main" >> /etc/apt/sources.list
+# RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y postgresql postgresql-contrib phppgadmin
+# RUN apt-get install -y php-pgsql
+
 RUN echo "mailhub=mailcatcher:1025\nUseTLS=NO\nFromLineOverride=YES" > /etc/ssmtp/ssmtp.conf
 
 RUN apt-get remove -y libmagickwand-dev libxml2-dev && \
