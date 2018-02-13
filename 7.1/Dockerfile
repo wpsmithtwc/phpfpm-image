@@ -13,6 +13,11 @@ RUN apt-get update && apt-get install -y \
 	imagemagick \
 	libmagickwand-dev \
 	libpq-dev \
+	libzip-dev \
+	libicu-dev \
+	libpng12-dev \
+	libjpeg62-turbo-dev \
+	libfreetype6-dev \
 	unzip
 
 RUN pecl install imagick
@@ -20,11 +25,22 @@ RUN docker-php-ext-enable imagick
 
 RUN docker-php-ext-install soap
 
-RUN apt-get update \
-  && apt-get install -y postgresql postgresql-contrib \
-  && apt-get install sudo \
-  && apt-get install -y libpq-dev \
-  && docker-php-ext-install pdo pdo_pgsql
+RUN apt-get  && apt-get install -y \
+	postgresql \
+	postgresql-contrib \
+  	sudo
+
+RUN docker-php-ext-install \
+        pdo \
+        pdo_pgsql \
+        pgsql \
+        sockets \
+        intl
+
+# RUN apt-get update \
+#   && apt-get install -y postgresql postgresql-contrib \
+#   && apt-get install sudo \
+#   && docker-php-ext-install pdo pdo_pgsql
 
 # RUN echo "deb http://ftp.de.debian.org/debian stretch main" >> /etc/apt/sources.list
 # RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y postgresql postgresql-contrib phppgadmin
